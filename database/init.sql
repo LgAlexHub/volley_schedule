@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS registers;
+CREATE TABLE registers (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    coming BOOLEAN NOT NULL,
+    coming_date VARCHAR(255) NOT NULL
+);
