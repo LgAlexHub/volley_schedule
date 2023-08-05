@@ -23,9 +23,8 @@
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
     "$std/": "https://deno.land/std@0.193.0/",
-    "sqlite" : "https://deno.land/x/sqlite@v3.7.2/mod.ts",
-    "path"       : "https://deno.land/std@0.183.0/path/mod.ts",
-    "std/"  : "https://deno.land/std@0.184.0/"
+    "path": "https://deno.land/std@0.183.0/path/mod.ts",
+    "std/": "https://deno.land/std@0.184.0/"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

@@ -1,8 +1,12 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Register } from "../models/Register.ts";
-import { connect } from "../helpers/sqlite.ts";
-import { checkFormInputs, feedback, type FeedbackProps } from "../helpers/form.tsx";
+import {
+  checkFormInputs,
+  feedback,
+  type FeedbackProps,
+} from "../helpers/form.tsx";
+import { insertOneRegister } from "../helpers/mongodb.ts";
 
 const formKeys = [
   { "formKey": "last_name", "formTranslation": "Nom" },
@@ -16,7 +20,7 @@ const formKeys = [
 export const handler: Handlers = {
   async POST(req, ctx) {
     const formData = await req.formData();
-    const feedbackForm = checkFormInputs(formData, formKeys)
+    const feedbackForm = checkFormInputs(formData, formKeys);
 
     if (feedbackForm.type === "success") {
       const register = new Register(
@@ -25,14 +29,12 @@ export const handler: Handlers = {
         formData.get(formKeys[2].formKey)?.toString() === "0" ? false : true,
         formData.get("next_monday")?.toString(),
       );
-      register.insert(connect());
+      insertOneRegister(register);
     }
 
     return ctx.render(feedbackForm);
   },
 };
-
-
 
 export default function Home(feedbackProps: PageProps<FeedbackProps>) {
   const today = new Date();

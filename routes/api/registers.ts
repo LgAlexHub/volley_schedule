@@ -1,13 +1,10 @@
 import { Handlers } from "$fresh/server.ts";
 import { getCookies } from "std/http/cookie.ts";
-import { connect } from "../../helpers/sqlite.ts";
 import { Register } from "../../models/Register.ts";
-import { QueryParameterSet } from "sqlite";
-
-const db = connect();
+import { countRegister, paginate } from "../../helpers/mongodb.ts";
 
 export const handler: Handlers = {
-  GET(req, _) {
+  async GET(req, _) {
     const headers = new Headers();
     headers.set("Content-Type", "application/json");
     const api_key = getCookies(req.headers).admin_checker;
@@ -22,27 +19,28 @@ export const handler: Handlers = {
     const urlParams = new URLSearchParams(
       req.url.substring(req.url.indexOf("?")),
     );
-    const page = urlParams.has("page") ? urlParams.get("page") : 1 ;
-    const offset = (Number(page) - 1) * 10;
-    const countRegister = Register.count({
-      db: db,
-      where: urlParams.has("date") ? "WHERE coming_date = ?" : null,
-      value: urlParams.has("date") ? [urlParams.get("date")] : null,
-    });
-    const registers = Register.select({
-      db: db,
-      where: `${urlParams.has("date") ? "WHERE coming_date = ?" : ""} LIMIT ${offset}, ${perPage}`,
-      value: urlParams.has("date")
-      ? [urlParams.get("date")]
-      : [] as QueryParameterSet,
-    });
-    const totalPage = Math.ceil(countRegister/perPage);
+    const page = urlParams.has("page") ? urlParams.get("page") : 1;
+    const countRegisters = await countRegister(urlParams.get("date") ?? "");
+    let registers = await paginate(
+      urlParams.get("date") ?? "",
+      Number(page),
+      perPage,
+    );
+    registers = registers.documents.map((
+      register: {
+        first_name: string;
+        last_name: string;
+        coming: boolean;
+        coming_date: string;
+      },
+    ) => Register.fromMap(register));
+    const totalPage = Math.ceil(countRegisters / perPage);
     const jsonResponse = {
-      data : registers,
-      totalPage : totalPage,
-      totalRows : countRegister,
-      perPage : perPage,
-      currentPage : page
+      data: registers,
+      totalPage: totalPage,
+      totalRows: countRegisters,
+      perPage: perPage,
+      currentPage: page,
     };
     return new Response(
       JSON.stringify(
