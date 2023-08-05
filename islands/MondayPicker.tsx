@@ -61,7 +61,7 @@ export default function MondayPicker() {
   const currentPage = useSignal(1);
   const fetchRegister = async (stringDate: string) => {
     const apiResponse = await fetch(
-      `http://${new URL(window.location.href).host}/api/registers?date=${
+      `https://${new URL(window.location.href).host}/api/registers?date=${
         encodeURI(stringDate)
       }&page=${currentPage}`,
     );
