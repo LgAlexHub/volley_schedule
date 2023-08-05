@@ -1,6 +1,6 @@
 import { Register } from "../models/Register.ts";
 
-const apikey = Deno.env.get('MONGO_DB_API_KEY') ?? '';
+const apiKey = Deno.env.get('MONGO_DB_API_KEY') ?? '';
 const baseURI = Deno.env.get('MONGO_DB_BASE_URL');
 
 export async function insertOneRegister(register: Register) {
@@ -9,7 +9,7 @@ export async function insertOneRegister(register: Register) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "api-key": apikey,
+      "api-key": apiKey,
     },
     body: JSON.stringify({
       dataSource: "Cluster0",
@@ -30,7 +30,7 @@ export async function paginate(date: string, pageToGo: number, perPage = 5) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "api-key": apikey,
+      "api-key": apiKey,
     },
     body: JSON.stringify({
       dataSource: "Cluster0",
@@ -54,7 +54,7 @@ export async function countRegister(date: string): Promise<number> {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "api-key": apikey,
+      "api-key": apiKey,
     },
     body: JSON.stringify({
       dataSource: "Cluster0",
@@ -73,5 +73,5 @@ export async function countRegister(date: string): Promise<number> {
   };
   const response = await fetch(url, options);
   const json = await response.json();
-  return Number(json.documents[0].count);
+  return Number(json.documents[0]?.count ?? 0);
 }
