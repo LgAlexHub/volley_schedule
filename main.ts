@@ -12,14 +12,9 @@ import manifest from "./fresh.gen.ts";
 import twindPlugin from "$fresh/plugins/twind.ts";
 import twindConfig from "./twind.config.ts";
 
-import { initMySqlite } from "./helpers/sqlite.ts";
-import { parse } from "std/flags/mod.ts";
-
 Deno.env.set("ADMIN_UUID", crypto.randomUUID())
 Deno.env.set("ADMIN_USER", "admin");
 Deno.env.set("ADMIN_PASS", "secret");
 
-const args = parse(Deno.args, {});
-initMySqlite(args?.initdb ?? false);
 
 await start(manifest, { plugins: [twindPlugin(twindConfig)] });
