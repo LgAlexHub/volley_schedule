@@ -1,20 +1,9 @@
 import { Head } from "$fresh/runtime.ts";
 import { Handlers } from "$fresh/server.ts";
-import { getCookies } from "std/http/cookie.ts";
 import MondayPicker from "../../islands/MondayPicker.tsx";
 
 export const handler: Handlers = {
-  GET(req, ctx) {
-    if (getCookies(req.headers).admin_checker != Deno.env.get('ADMIN_UUID')){
-      const header = new Headers();
-      header.set('location', '/admin/login');
-      return new Response(
-        null, {
-          headers : header,
-          status : 301
-        }
-      );
-    }
+  GET(_, ctx) {
     return ctx.render();
   },
 };

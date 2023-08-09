@@ -1,20 +1,11 @@
 import { Handlers } from "$fresh/server.ts";
-import { getCookies } from "std/http/cookie.ts";
-import { Register } from "../../models/Register.ts";
-import { countRegister, paginate } from "../../helpers/mongodb.ts";
+import { Register } from "../../../models/Register.ts";
+import { countRegister, paginate } from "../../../helpers/mongodb.ts";
 
 export const handler: Handlers = {
   async GET(req, _) {
     const headers = new Headers();
     headers.set("Content-Type", "application/json");
-    const api_key = getCookies(req.headers).admin_checker;
-    if (api_key != Deno.env.get("ADMIN_UUID")) {
-      return new Response(JSON.stringify("unauthorized"), {
-        status: 401,
-        headers: headers,
-      });
-    }
-
     const perPage = 10;
     const urlParams = new URLSearchParams(
       req.url.substring(req.url.indexOf("?")),

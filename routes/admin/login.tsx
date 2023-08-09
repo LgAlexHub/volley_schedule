@@ -13,15 +13,7 @@ const formKeys = [
 ];
 
 export const handler: Handlers = {
-  GET(req, ctx) {
-    const headers = new Headers(req.headers);
-    headers.set("location", "/admin");
-    if (getCookies(headers).admin_checker == Deno.env.get("ADMIN_UUID")) {
-      return new Response(null, {
-        headers: headers,
-        status : 301,
-      });
-    }
+  GET(_, ctx) {
     return ctx.render();
   },
   async POST(req, ctx) {

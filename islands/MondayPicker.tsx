@@ -14,7 +14,11 @@ function rows(register: Register[]) {
         <td class={`bg-gray-${altern ? 200 : 400} border border-slate-600`}>
           {register.firstName}
         </td>
-        <td class={`bg-${register.coming ? "green" : "red"}-${altern ? 200 : 400}`}>
+        <td
+          class={`bg-${register.coming ? "green" : "red"}-${
+            altern ? 200 : 400
+          }`}
+        >
           {register.coming ? "Oui" : "Non"}
         </td>
       </tr>
@@ -45,7 +49,11 @@ const paginator = (
 ) =>
   Array.from(Array(totalPage).keys()).map((number) => (
     <button
-      class={`rounded bg-blue-${number + 1 == currentPage ? 600 : 400} text-center px-1 py-1 my-2 w-full text-${number + 1 == currentPage ? 'black':'white'} hover:bg-blue-700`}
+      class={`rounded bg-blue-${
+        number + 1 == currentPage ? 600 : 400
+      } text-center px-1 py-1 my-2 w-full text-${
+        number + 1 == currentPage ? "black" : "white"
+      } hover:bg-blue-700`}
       onClick={() => callBack(number + 1)}
     >
       {number + 1}
@@ -60,8 +68,10 @@ export default function MondayPicker() {
   const totalPage = useSignal(1);
   const currentPage = useSignal(1);
   const fetchRegister = async (stringDate: string) => {
+    const hostName = new URL(window.location.href).host;
+    const httpProtocol = hostName.includes("localhost") ? "http" : "https";
     const apiResponse = await fetch(
-      `https://${new URL(window.location.href).host}/api/registers?date=${
+      `${httpProtocol}://${hostName}/api/registers/paginate?date=${
         encodeURI(stringDate)
       }&page=${currentPage}`,
     );

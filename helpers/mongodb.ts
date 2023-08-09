@@ -24,6 +24,7 @@ export async function insertOneRegister(register: Register) {
 
 export async function paginate(date: string, pageToGo: number, perPage = 5) {
   const url = encodeURI(`${baseURI}/action/find`);
+  let response = null;
   perPage = perPage > 0 ? perPage : 1;
   pageToGo = pageToGo > 0 ? pageToGo : 1;
   const options = {
@@ -43,9 +44,13 @@ export async function paginate(date: string, pageToGo: number, perPage = 5) {
       skip: perPage * (pageToGo - 1),
     }),
   };
-  const response = await fetch(url, options);
-  const json = await response.json();
-  return json;
+
+  try{
+    response = await fetch(url, options);
+    return await response.json();
+  }catch(error){
+    console.error(error)
+  }
 }
 
 export async function countRegister(date: string): Promise<number> {
